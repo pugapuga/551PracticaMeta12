@@ -6,12 +6,12 @@ public class Fase {
 
 	private String nombre;
 	private FlujoDeTrabajo flujoDeTrabajo;
-	private ArrayList<Tarea> tareas;
+	private Vector<Tarea> tareas;
 
 	public Fase(String nombre, FlujoDeTrabajo flujoDeTrabajo) {
 		this.nombre = nombre;
 		this.flujoDeTrabajo = flujoDeTrabajo;
-		this.tareas = new ArrayList<Tarea>();
+		this.tareas = new Vector<Tarea>();
 	}
 
 	public String getNombre() {
@@ -30,11 +30,11 @@ public class Fase {
 		this.flujoDeTrabajo = flujoDeTrabajo;
 	}
 
-	public ArrayList<Tarea> getTareas() {
+	public Vector<Tarea> getTareas() {
 		return tareas;
 	}
 
-	public void setTareas(ArrayList<Tarea> tareas) {
+	public void setTareas(Vector<Tarea> tareas) {
 		this.tareas = tareas;
 	}
 

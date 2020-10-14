@@ -6,12 +6,14 @@ import flujodetrabajo.FlujoDeTrabajo;
 import flujodetrabajo.Tarea;
 
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.ArrayList;
 
 public class TableroGUI extends JDialog {
     private FlujoDeTrabajo flujoDeTrabajo;
+    private DefaultTableModel modelo;
     private JPanel contentPane;
     private JButton buttonOK;
     private JButton buttonCancel;
@@ -20,8 +22,15 @@ public class TableroGUI extends JDialog {
     private JButton buttonAgregarActividad;
     private JButton buttonAgregarFase;
     private JButton buttonAgregarTarea;
-    private JTabbedPane tabbedPaneTablero;
-    private JPanel panelMiTablero;
+    private JTextField textFieldActividad;
+    private JTextField textFieldFase;
+    private JTextField textFieldTarea;
+    private JComboBox comboBoxActividades;
+    private JComboBox comboBoxFases;
+    private JTable tableTablero;
+    private JPanel panel;
+    private JTextField textFieldTareaActividad;
+    private JTextField textFieldTareaFase;
     private JList listActividad;
 
     public TableroGUI() {
@@ -75,39 +84,54 @@ public class TableroGUI extends JDialog {
                 buttonTest.setText("Bye!");
             }
         });
-        buttonCrearFDT.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-
-
-            }
-        });
         buttonAgregarActividad.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                Actividad actividad = new Actividad("Actividad 1", flujoDeTrabajo);
+                Actividad actividad = new Actividad(textFieldActividad.getText(), flujoDeTrabajo);
                 flujoDeTrabajo.getActividades().add(actividad);
-                JOptionPane.showMessageDialog(null, flujoDeTrabajo);
+                actualizarTablero();
+                //JOptionPane.showMessageDialog(null, flujoDeTrabajo);
             }
         });
         buttonAgregarFase.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                Fase fase = new Fase("Fase 1", flujoDeTrabajo);
+                Fase fase = new Fase(textFieldFase.getText(), flujoDeTrabajo);
                 flujoDeTrabajo.getFases().add(fase);
-                JOptionPane.showMessageDialog(null, flujoDeTrabajo);
+                actualizarTablero();
+                //JOptionPane.showMessageDialog(null, flujoDeTrabajo);
             }
         });
         buttonAgregarTarea.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                Actividad actividad = flujoDeTrabajo.getActividades().get(0);
-                Fase fase = flujoDeTrabajo.getFases().get(0);
+                Actividad actividad = flujoDeTrabajo.getActividades().get(comboBoxActividades.getSelectedIndex());
+                Fase fase = flujoDeTrabajo.getFases().get(comboBoxFases.getSelectedIndex());
 
-                Tarea tarea = new Tarea("Tarea 1", actividad, fase, flujoDeTrabajo);
+                Tarea tarea = new Tarea(textFieldTarea.getText(), actividad, fase, flujoDeTrabajo);
 
                 actividad.getTareas().add(tarea);
                 fase.getTareas().add(tarea);
                 flujoDeTrabajo.getTareas().add(tarea);
-                JOptionPane.showMessageDialog(null, flujoDeTrabajo);
+
+                actualizarTablero();
+                //JOptionPane.showMessageDialog(null, flujoDeTrabajo);
             }
         });
+
+    }
+    private void actualizarTablero(){
+        comboBoxActividades.removeAllItems();
+        for(int i = 0; i < flujoDeTrabajo.getActividades().size(); i++)
+            comboBoxActividades.addItem(flujoDeTrabajo.getActividades().get(i).getNombre());
+
+        comboBoxFases.removeAllItems();
+        for(int i = 0; i < flujoDeTrabajo.getFases().size(); i++)
+            comboBoxFases.addItem(flujoDeTrabajo.getFases().get(i).getNombre());
+
+        modelo = new DefaultTableModel();
+        tableTablero.setModel(modelo);
+        for (int i = 0; i < flujoDeTrabajo.getFases().size(); i++) {
+            modelo.addColumn(flujoDeTrabajo.getFases().get(i).getNombre(), flujoDeTrabajo.getFases().get(i).getTareas());
+        }
+
     }
 
     private void onOK() {
