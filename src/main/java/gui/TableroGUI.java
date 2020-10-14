@@ -29,6 +29,7 @@ public class TableroGUI extends JDialog {
     private JComboBox comboBoxFases;
     private JTable tableTablero;
     private JPanel panel;
+    private JButton buttonToolBarTest;
     private JTextField textFieldTareaActividad;
     private JTextField textFieldTareaFase;
     private JList listActividad;
