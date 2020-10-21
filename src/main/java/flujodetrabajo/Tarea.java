@@ -1,6 +1,8 @@
 package flujodetrabajo;
 
-public class Tarea {
+import java.io.Serializable;
+
+public class Tarea implements Serializable {
 
 	private String nombre;
 	private Actividad actividad;

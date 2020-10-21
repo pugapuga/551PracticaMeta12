@@ -1,5 +1,6 @@
 package gui;
 
+import escuela.Alumno;
 import flujodetrabajo.Actividad;
 import flujodetrabajo.Fase;
 import flujodetrabajo.FlujoDeTrabajo;
@@ -7,9 +8,8 @@ import flujodetrabajo.Tarea;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
-import java.awt.*;
 import java.awt.event.*;
-import java.util.ArrayList;
+import java.io.*;
 
 public class TableroGUI extends JDialog {
     private FlujoDeTrabajo flujoDeTrabajo;
@@ -29,7 +29,10 @@ public class TableroGUI extends JDialog {
     private JComboBox comboBoxFases;
     private JTable tableTablero;
     private JPanel panel;
-    private JButton buttonToolBarTest;
+    private JButton buttonToolBarGrabar;
+    private JButton buttonToolBarEjemplo1;
+    private JButton buttonToolBarEjemplo2;
+    private JButton buttonToolBarRecuperar;
     private JTextField textFieldTareaActividad;
     private JTextField textFieldTareaFase;
     private JList listActividad;
@@ -117,6 +120,135 @@ public class TableroGUI extends JDialog {
             }
         });
 
+        buttonToolBarEjemplo1.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    FileOutputStream fileOutputStream = new FileOutputStream("flujodetrabajo.dat");
+                    BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(fileOutputStream);
+                    //byte b = 00;
+                    //fileOutputStream.write(b);
+                    DataOutputStream dataOutputStream = new DataOutputStream(bufferedOutputStream);
+
+                    dataOutputStream.writeUTF("Hola mundo!");
+                    bufferedOutputStream.flush();
+
+                    dataOutputStream.close();
+                    bufferedOutputStream.close();
+                    fileOutputStream.close();
+                } catch (FileNotFoundException fileNotFoundException) {
+                    fileNotFoundException.printStackTrace();
+                } catch (IOException ioException) {
+                    ioException.printStackTrace();
+                }
+
+
+                try {
+                    FileInputStream fileInputStream = new FileInputStream("flujodetrabajo.dat");
+                    //byte b[];
+                    //final int read = fileInputStream.read(b[]);
+                    DataInputStream dataInputStream = new DataInputStream(fileInputStream);
+
+
+                    final String s = dataInputStream.readUTF();
+
+                    dataInputStream.close();
+                    fileInputStream.close();
+
+                    JOptionPane.showMessageDialog(null, s);
+
+                } catch (FileNotFoundException fileNotFoundException) {
+                    fileNotFoundException.printStackTrace();
+                } catch (IOException ioException) {
+                    ioException.printStackTrace();
+                }
+            }
+        });
+        buttonToolBarEjemplo2.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                Alumno alumno = new Alumno("Pepito");
+
+                try {
+                    FileOutputStream fileOutputStream = new FileOutputStream("flujodetrabajo.dat");
+                    BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(fileOutputStream);
+                    ObjectOutputStream objectOutputStream = new ObjectOutputStream(bufferedOutputStream);
+
+                    objectOutputStream.writeObject(alumno);
+                    bufferedOutputStream.flush();
+
+                    objectOutputStream.close();
+                    bufferedOutputStream.close();
+                    fileOutputStream.close();
+                } catch (FileNotFoundException fileNotFoundException) {
+                    fileNotFoundException.printStackTrace();
+                } catch (IOException ioException) {
+                    ioException.printStackTrace();
+                }
+
+
+                try {
+                    FileInputStream fileInputStream = new FileInputStream("flujodetrabajo.dat");
+                    ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream);
+
+                    final Alumno a = (Alumno) objectInputStream.readObject();
+
+                    objectInputStream.close();
+                    fileInputStream.close();
+
+                    JOptionPane.showMessageDialog(null, a);
+
+                } catch (FileNotFoundException fileNotFoundException) {
+                    fileNotFoundException.printStackTrace();
+                } catch (IOException ioException) {
+                    ioException.printStackTrace();
+                } catch (ClassNotFoundException classNotFoundException) {
+                    classNotFoundException.printStackTrace();
+                }
+            }
+        });
+        buttonToolBarGrabar.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+
+                try {
+                    FileOutputStream fileOutputStream = new FileOutputStream("flujodetrabajo.dat");
+                    BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(fileOutputStream);
+                    ObjectOutputStream objectOutputStream = new ObjectOutputStream(bufferedOutputStream);
+
+                    objectOutputStream.writeObject(flujoDeTrabajo);
+                    bufferedOutputStream.flush();
+
+                    objectOutputStream.close();
+                    bufferedOutputStream.close();
+                    fileOutputStream.close();
+                } catch (FileNotFoundException fileNotFoundException) {
+                    fileNotFoundException.printStackTrace();
+                } catch (IOException ioException) {
+                    ioException.printStackTrace();
+                }
+
+            }
+        });
+        buttonToolBarRecuperar.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    FileInputStream fileInputStream = new FileInputStream("flujodetrabajo.dat");
+                    ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream);
+
+                    flujoDeTrabajo = (FlujoDeTrabajo) objectInputStream.readObject();
+
+                    objectInputStream.close();
+                    fileInputStream.close();
+
+                } catch (FileNotFoundException fileNotFoundException) {
+                    fileNotFoundException.printStackTrace();
+                } catch (IOException ioException) {
+                    ioException.printStackTrace();
+                } catch (ClassNotFoundException classNotFoundException) {
+                    classNotFoundException.printStackTrace();
+                }
+
+                actualizarTablero();
+            }
+        });
     }
     private void actualizarTablero(){
         comboBoxActividades.removeAllItems();

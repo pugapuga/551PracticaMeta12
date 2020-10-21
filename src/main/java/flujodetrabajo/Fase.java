@@ -1,8 +1,9 @@
 package flujodetrabajo;
 
+import java.io.Serializable;
 import java.util.*;
 
-public class Fase {
+public class Fase implements Serializable {
 
 	private String nombre;
 	private FlujoDeTrabajo flujoDeTrabajo;

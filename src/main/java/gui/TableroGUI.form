@@ -155,10 +155,28 @@
         <properties/>
         <border type="none"/>
         <children>
-          <component id="45e98" class="javax.swing.JButton" binding="buttonToolBarTest">
+          <component id="8a907" class="javax.swing.JButton" binding="buttonToolBarEjemplo1">
             <constraints/>
             <properties>
-              <text value="Button"/>
+              <text value="Ejemplo 1"/>
+            </properties>
+          </component>
+          <component id="f8ad5" class="javax.swing.JButton" binding="buttonToolBarEjemplo2">
+            <constraints/>
+            <properties>
+              <text value="Ejemplo 2"/>
+            </properties>
+          </component>
+          <component id="45e98" class="javax.swing.JButton" binding="buttonToolBarGrabar">
+            <constraints/>
+            <properties>
+              <text value="Grabar"/>
+            </properties>
+          </component>
+          <component id="555d1" class="javax.swing.JButton" binding="buttonToolBarRecuperar">
+            <constraints/>
+            <properties>
+              <text value="Recuperar"/>
             </properties>
           </component>
         </children>
