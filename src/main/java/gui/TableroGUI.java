@@ -7,6 +7,7 @@ import flujodetrabajo.FlujoDeTrabajo;
 import flujodetrabajo.Tarea;
 
 import javax.swing.*;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableModel;
 import java.awt.event.*;
 import java.io.*;
@@ -208,45 +209,59 @@ public class TableroGUI extends JDialog {
         buttonToolBarGrabar.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
 
-                try {
-                    FileOutputStream fileOutputStream = new FileOutputStream("flujodetrabajo.dat");
-                    BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(fileOutputStream);
-                    ObjectOutputStream objectOutputStream = new ObjectOutputStream(bufferedOutputStream);
+                JFileChooser fileChooser = new JFileChooser();
+                int seleccion = fileChooser.showSaveDialog(null);
 
-                    objectOutputStream.writeObject(flujoDeTrabajo);
-                    bufferedOutputStream.flush();
+                if (seleccion == JFileChooser.APPROVE_OPTION)
+                {
+                    File fichero = fileChooser.getSelectedFile();
+                    try {
+                        FileOutputStream fileOutputStream = new FileOutputStream(fichero);
+                        BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(fileOutputStream);
+                        ObjectOutputStream objectOutputStream = new ObjectOutputStream(bufferedOutputStream);
 
-                    objectOutputStream.close();
-                    bufferedOutputStream.close();
-                    fileOutputStream.close();
-                } catch (FileNotFoundException fileNotFoundException) {
-                    fileNotFoundException.printStackTrace();
-                } catch (IOException ioException) {
-                    ioException.printStackTrace();
+                        objectOutputStream.writeObject(flujoDeTrabajo);
+                        bufferedOutputStream.flush();
+
+                        objectOutputStream.close();
+                        bufferedOutputStream.close();
+                        fileOutputStream.close();
+                    } catch (FileNotFoundException fileNotFoundException) {
+                        fileNotFoundException.printStackTrace();
+                    } catch (IOException ioException) {
+                        ioException.printStackTrace();
+                    }
                 }
-
             }
         });
         buttonToolBarRecuperar.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                try {
-                    FileInputStream fileInputStream = new FileInputStream("flujodetrabajo.dat");
-                    ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream);
+                JFileChooser fileChooser = new JFileChooser();
+                FileNameExtensionFilter filter = new FileNameExtensionFilter("Puga File", "puga");
+                fileChooser.setFileFilter(filter);
+                int seleccion = fileChooser.showOpenDialog(null);
 
-                    flujoDeTrabajo = (FlujoDeTrabajo) objectInputStream.readObject();
+                if (seleccion == JFileChooser.APPROVE_OPTION) {
+                    File fichero = fileChooser.getSelectedFile();
+                    try {
+                        FileInputStream fileInputStream = new FileInputStream(fichero);
+                        ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream);
 
-                    objectInputStream.close();
-                    fileInputStream.close();
+                        flujoDeTrabajo = (FlujoDeTrabajo) objectInputStream.readObject();
 
-                } catch (FileNotFoundException fileNotFoundException) {
-                    fileNotFoundException.printStackTrace();
-                } catch (IOException ioException) {
-                    ioException.printStackTrace();
-                } catch (ClassNotFoundException classNotFoundException) {
-                    classNotFoundException.printStackTrace();
+                        objectInputStream.close();
+                        fileInputStream.close();
+
+                    } catch (FileNotFoundException fileNotFoundException) {
+                        fileNotFoundException.printStackTrace();
+                    } catch (IOException ioException) {
+                        ioException.printStackTrace();
+                    } catch (ClassNotFoundException classNotFoundException) {
+                        classNotFoundException.printStackTrace();
+                    }
+
+                    actualizarTablero();
                 }
-
-                actualizarTablero();
             }
         });
     }
