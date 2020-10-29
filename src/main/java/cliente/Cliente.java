@@ -1,8 +1,8 @@
 package cliente;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
+import flujodetrabajo.FlujoDeTrabajo;
+
+import java.io.*;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
@@ -11,10 +11,15 @@ public class Cliente {
     private String HOST = "localhost";
     //Puerto del servidor
     private int PUERTO = 666;
+    private FlujoDeTrabajo flujoDeTrabajo;
+
+    private ObjectOutputStream objectOutputStream;
+    private ObjectInputStream objectInputStream;
 
     public Cliente(String HOST, int PUERTO) {
         this.HOST = HOST;
         this.PUERTO = PUERTO;
+        this.flujoDeTrabajo = new FlujoDeTrabajo("Default");
     }
 
     public void enviarMensaje(String mensaje){
@@ -24,19 +29,28 @@ public class Cliente {
             System.out.println("Cliente conectado al servidor");
 
             //Envio un mensaje al cliente
-            DataOutputStream dataOutputStream = new DataOutputStream(socket.getOutputStream());
-            dataOutputStream.writeUTF(mensaje);
-            System.out.println("El cliente envio el siguiente mensaje: " + mensaje);
+            this.objectOutputStream = new ObjectOutputStream(socket.getOutputStream());
+            this.objectOutputStream.writeObject(mensaje);
+            System.out.println("El cliente envio el siguiente objeto: " + mensaje);
 
             //Recibo el mensaje del servidor
-            DataInputStream dataInputStream = new DataInputStream(socket.getInputStream());
-            String respuesta = dataInputStream.readUTF();
+            this.objectInputStream = new ObjectInputStream(socket.getInputStream());
+            Object object = objectInputStream.readObject();
 
-            System.out.println("El servidor responio el siguiente mensaje: "+ respuesta);
 
+            if (object.getClass().getCanonicalName().equals("flujodetrabajo.FlujoDeTrabajo")){
+                this.flujoDeTrabajo = (FlujoDeTrabajo) object;
+                System.out.println("El servidor envio el flujo de trabajo: " + flujoDeTrabajo);
+            } else{
+                System.out.println("El servidor envio el objeto: " + object);
+            }
+            this.objectOutputStream.close();
+            //this.objectInputStream.close();
             socket.close();
 
         } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
     }
