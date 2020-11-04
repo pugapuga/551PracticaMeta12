@@ -22,6 +22,31 @@ public class Cliente {
         this.flujoDeTrabajo = new FlujoDeTrabajo("Default");
     }
 
+    public FlujoDeTrabajo getFlujoDeTrabajo() {
+        try {
+            //Creo el socket para conectarme con el cliente
+            Socket socket = new Socket(HOST, PUERTO);
+            //Envio un mensaje al cliente
+            this.objectOutputStream = new ObjectOutputStream(socket.getOutputStream());
+            this.objectOutputStream.writeObject("GET FLU");
+            //Recibo el mensaje del servidor
+            this.objectInputStream = new ObjectInputStream(socket.getInputStream());
+            this.flujoDeTrabajo = (FlujoDeTrabajo) objectInputStream.readObject();
+            this.objectOutputStream.close();
+            this.objectInputStream.close();
+            socket.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+        return this.flujoDeTrabajo;
+    }
+
+    public void setFlujoDeTrabajo(FlujoDeTrabajo flujoDeTrabajo) {
+        this.flujoDeTrabajo = flujoDeTrabajo;
+    }
+
     public void enviarMensaje(String mensaje){
         try {
             //Creo el socket para conectarme con el cliente
@@ -45,7 +70,7 @@ public class Cliente {
                 System.out.println("El servidor envio el objeto: " + object);
             }
             this.objectOutputStream.close();
-            //this.objectInputStream.close();
+            this.objectInputStream.close();
             socket.close();
 
         } catch (IOException e) {
