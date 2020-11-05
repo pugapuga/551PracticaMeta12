@@ -23,10 +23,14 @@ public class ClienteTableroGUI extends JDialog {
     private JTextField textFieldTarea;
     private JComboBox comboBoxActividades;
     private JComboBox comboBoxFases;
+    private JButton buttonActualizarCombos;
 
     public ClienteTableroGUI() {
         flujoDeTrabajo = new FlujoDeTrabajo("Mi Flujo de Trabajo");
         cliente = new Cliente("localhost", 666);
+
+        HiloTablero hiloTablero = new HiloTablero(cliente,flujoDeTrabajo,modelo,tableTablero);
+        hiloTablero.start();
 
         setContentPane(contentPane);
         setModal(true);
@@ -62,7 +66,7 @@ public class ClienteTableroGUI extends JDialog {
             @Override
             public void actionPerformed(ActionEvent e) {
                 cliente.enviarMensaje("ADD ACT " + textFieldActividad.getText());
-                actualizarTablero();
+                //actualizarTablero();
             }
         });
         buttonAgregarFase.addActionListener(new ActionListener() {
@@ -70,15 +74,28 @@ public class ClienteTableroGUI extends JDialog {
             public void actionPerformed(ActionEvent e) {
                 cliente.enviarMensaje("ADD FAS " + textFieldFase.getText());
 
-                actualizarTablero();
+                //actualizarTablero();
             }
         });
         buttonAgregarTarea.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 cliente.enviarMensaje("ADD TAR " + comboBoxActividades.getSelectedIndex() + comboBoxFases.getSelectedIndex() + textFieldTarea.getText());
+                //actualizarTablero();
+            }
+        });
+        buttonActualizarCombos.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                flujoDeTrabajo = cliente.getFlujoDeTrabajo();
+                comboBoxActividades.removeAllItems();
+                for(int i = 0; i < flujoDeTrabajo.getActividades().size(); i++)
+                    comboBoxActividades.addItem(flujoDeTrabajo.getActividades().get(i).getNombre());
 
-                actualizarTablero();
+                flujoDeTrabajo = cliente.getFlujoDeTrabajo();
+                comboBoxFases.removeAllItems();
+                for(int j = 0; j < flujoDeTrabajo.getFases().size(); j++)
+                    comboBoxFases.addItem(flujoDeTrabajo.getFases().get(j).getNombre());
             }
         });
     }
@@ -110,6 +127,7 @@ public class ClienteTableroGUI extends JDialog {
             modelo.addColumn(flujoDeTrabajo.getFases().get(i).getNombre(), flujoDeTrabajo.getFases().get(i).getTareas());
         }
     }
+
 
     public static void main(String[] args) {
         ClienteTableroGUI dialog = new ClienteTableroGUI();
