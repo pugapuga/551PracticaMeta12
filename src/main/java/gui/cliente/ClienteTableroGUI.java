@@ -29,7 +29,7 @@ public class ClienteTableroGUI extends JDialog {
         flujoDeTrabajo = new FlujoDeTrabajo("Mi Flujo de Trabajo");
         cliente = new Cliente("localhost", 666);
 
-        HiloTablero hiloTablero = new HiloTablero(cliente,flujoDeTrabajo,modelo,tableTablero);
+        HiloTablero hiloTablero = new HiloTablero(cliente,flujoDeTrabajo,modelo,tableTablero,comboBoxActividades,comboBoxFases);
         hiloTablero.start();
 
         setContentPane(contentPane);
