@@ -11,7 +11,7 @@ import java.net.Socket;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class Servidor {
+public class Servidor extends Thread{
     private ServerSocket serverSocket = null;
     private Socket socket = null;
     //puerto de nuestro servidor
@@ -22,10 +22,18 @@ public class Servidor {
 
     public Servidor(int PUERTO) {
         this.PUERTO = PUERTO;
-        this.iniciar();
     }
 
-    public void iniciar() {
+    public FlujoDeTrabajo getFlujoDeTrabajo() {
+        return flujoDeTrabajo;
+    }
+
+    public void setFlujoDeTrabajo(FlujoDeTrabajo flujoDeTrabajo) {
+        this.flujoDeTrabajo = flujoDeTrabajo;
+    }
+
+    @Override
+    public void run() {
         try {
             this.flujoDeTrabajo = new FlujoDeTrabajo("Mi Flujo de Trabajo");
             System.out.println("Se creo el objeto: " + this.flujoDeTrabajo);
